@@ -50,10 +50,6 @@ AssemblerErr_t Translation(Assembler* ASM) {
 
     SecondIteration(ASM, Labels);
 
-    for (int i=0; i<ASM->OutPutBuffer->meta.size; i++) {
-        printf("%d ", *(int*)move_ptr(ASM->OutPutBuffer->data, i, sizeof(int)));
-    } printf("\n");
-
     WordDestroy(Labels);
     StackDestroy(Labels);
 
