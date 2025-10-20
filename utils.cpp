@@ -66,8 +66,8 @@ AssemblerErr_t StackPushCommand(Assembler* ASM, size_t* i, Instruction* Commands
     if (word == NULL)
         return ASM_GETWORD_FAILED;
 
-    size_t command_index = 0;
-    if ( (command_index = BinSearch(Commands, Commands_size, sizeof(Instruction), word, strcmp_)) == Commands_size ) {
+    size_t command_index = BinSearch(Commands, Commands_size, sizeof(Instruction), word, strcmp_);
+    if ( command_index == Commands_size ) {
         fprintf(stderr, "STR[%s] Invalid command at line \n", word); // asm_line
         free(word);
         return ASM_INVALID_COMMAND; // DUMP(ASM_INVALID_COMMAND)
@@ -82,6 +82,26 @@ AssemblerErr_t StackPushCommand(Assembler* ASM, size_t* i, Instruction* Commands
         size_t regs_type = Commands[command_index].id;
         StackPush(ASM->OutPutBuffer, &regs_type);
     }
+    
+    return ASM_OK;
+}
+
+AssemblerErr_t StackPushLabel(Assembler* ASM, size_t* i, Stack_t* Labels) {
+    char* word = GetWord(ASM, i);
+    if (word == NULL)
+        return ASM_GETWORD_FAILED;
+
+    size_t command_index = BinSearch(Labels->data, Labels->meta.size, sizeof(Instruction), word, strcmp_);
+    if ( command_index == Labels->meta.size ) {
+        fprintf(stderr, "STR[%s] Invalid command at line \n", word); // asm_line
+        free(word);
+        return ASM_INVALID_COMMAND; // DUMP(ASM_INVALID_COMMAND)
+    }
+
+    free(word);
+
+    size_t Label_type = ((Instruction*)move_ptr(Labels->data, command_index, sizeof(Instruction)))->id;
+    StackPush(ASM->OutPutBuffer, &Label_type);
     
     return ASM_OK;
 }
@@ -123,26 +143,3 @@ int CommandsCompare(const void* a, const void* b) {
 
     return (strcmp(obj1.word, obj2.word));
 }
-
-/*!SECTION
-AssemblerErr_t DefineCommand(Assembler* ASM, size_t* i, Instruction* Commands, size_t Commands_size, size_t* command_index) {
-    char* word = GetWord(ASM, i);
-    if (word == NULL)
-        return ASM_GETWORD_FAILED;
-
-    printf("%s\n", word);
-    getchar();
-
-    if ( (*command_index = BinSearch(Commands, Commands_size, sizeof(Instruction), word, strcmp_)) == Commands_size ) {
-        *command_index = -1; // 13 -> 0 // => все время IN, тоже баг
-        fprintf(stderr, "STR[%s] Invalid command at line \n", word); // asm_line
-        free(word);
-        return ASM_INVALID_COMMAND; // DUMP(ASM_INVALID_COMMAND)
-    }
-    
-
-    free(word);
-    
-    return ASM_OK;
-}
-*/
