@@ -14,8 +14,7 @@ int main() {
 
     Translation(&ASM);
 
-    if ( Write_Buffer_2_File(&ASM, output_file_name) != ASM_OK )
-        return 1;
+    Write_Buffer_2_File(&ASM, output_file_name);
 
     AssemblerDestroy(&ASM);
     
