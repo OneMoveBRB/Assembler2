@@ -12,6 +12,7 @@ int main() {
     if ( Read_File_2_Buffer(&ASM, input_file_name, ASM.InputBuffer.capacity - 1) != ASM_OK )
         return 1;
 
+    // Используется qsort и бин поиск
     Translation(&ASM);
 
     Write_Buffer_2_File(&ASM, output_file_name);
