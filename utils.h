@@ -16,7 +16,7 @@ AssemblerErr_t StackPushLabel(Assembler* ASM, size_t* i, Stack_t* Labels);
 size_t BinSearch(void* arr, size_t num, size_t element_size, void* value, int (*cmp)(const void*, const void*));
 
 void* move_ptr(void* arr, size_t offset, size_t element_size);
-int strcmp_(const void* a, const void* b);
-int CommandsCompare(const void* a, const void* b);
+int InstrStrCompare(const void* a, const void* b);
+int InstructionsCompare(const void* a, const void* b);
 
 #endif
