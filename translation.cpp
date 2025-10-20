@@ -10,22 +10,27 @@
 #include "utils.h"
 
 Instruction Commands[] = {
-    {"ADD"  ,	ADD  },
-    {"HLT"  ,	HLT  },
     {"IN"   ,	IN   },
+    {"PUSH" ,	PUSH },
+    {"POP"  ,	POP  },
+    {"PUSHR",	PUSHR},
+    {"POPR" ,	POPR },
+    {"ADD"  ,	ADD  },
+    {"SUB"  ,	SUB  },
     {"MUL"  ,	MUL  },
     {"OUT"  ,	OUT  },
-    {"POP"  ,	POP  },
-    {"POPR" ,	POPR },
-    {"PUSH" ,	PUSH },
-    {"PUSHR",	PUSHR},
+    {"HLT"  ,	HLT  },
     {"RAX"  ,   RAX  },
     {"RBX"  ,   RBX  },
     {"RCX"  ,   RCX  },
-    {"SUB"  ,	SUB  }
+    {"JA"   ,   JA   },
+    {"JAE"  ,   JAE  },
+    {"JB"   ,   JB   },
+    {"JBE"  ,   JBE  },
+    {"JE"   ,   JE   },
+    {"JNE"  ,   JNE  },
+    {"JMP"  ,   JMP  }
 };
-
-    
 
 size_t Commands_size = sizeof(Commands)/sizeof(Commands[0]);
 
@@ -64,7 +69,6 @@ AssemblerErr_t FirstIteration(Assembler* ASM, Stack_t* Labels) {
 
 AssemblerErr_t SecondIteration(Assembler* ASM, Stack_t* Labels) {
     char* input_buffer = ASM->InputBuffer.data;
-    // void* output_buffer = ASM->OutPutBuffer->data;
     
     size_t asm_line = 1;
 
@@ -92,7 +96,7 @@ AssemblerErr_t SecondIteration(Assembler* ASM, Stack_t* Labels) {
             free(word);
         } else if (command_type == PUSHR || command_type == POPR) {
             StackPushCommand(ASM, &i, Commands, Commands_size, NULL);
-        }
+        } //else if (command_type == JA)
 
         Skip_Spaces(ASM, &i, &asm_line);
     }
@@ -101,6 +105,8 @@ AssemblerErr_t SecondIteration(Assembler* ASM, Stack_t* Labels) {
 }
 
 AssemblerErr_t Translation(Assembler* ASM) {
+    qsort(Commands, Commands_size, sizeof(Instruction), CommandsCompare);
+
     Stack_t* Labels;
     StackInit(&Labels, sizeof(Instruction), FIRST_SIZE, "Labels");
 
