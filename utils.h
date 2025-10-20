@@ -4,7 +4,7 @@
 #include "asm_settings.h"
 #include "instruction.h"
 
-void Skip_Spaces(Assembler* ASM, size_t* i, size_t* asm_line = NULL);
+void SkipSpaces(Assembler* ASM, size_t* i, size_t* asm_line = NULL);
 int SkipWord(Assembler* ASM, size_t* i);
 
 char* GetWord(Assembler* ASM, size_t* i);
@@ -15,7 +15,7 @@ AssemblerErr_t StackPushInt(Assembler* ASM, size_t* i);
 
 size_t BinSearch(void* arr, size_t num, size_t element_size, void* value, int (*cmp)(const void*, const void*));
 
-void* move_ptr(void* arr, size_t offset, size_t element_size);
+void* MovePtr(void* arr, size_t offset, size_t element_size);
 int InstrStrCompare(const void* a, const void* b);
 int InstructionsCompare(const void* a, const void* b);
 
