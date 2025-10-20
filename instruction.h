@@ -19,10 +19,10 @@ enum InstructionType {
     MUL     = 8,
     OUT     = 9,
     HLT     = 10,
-    JB      = 11,
-    JBE     = 12,
     JA      = 13,
     JAE     = 14,
+    JB      = 11,
+    JBE     = 12,
     JE      = 15,
     JNE     = 16,
     JMP     = 17
