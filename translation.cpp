@@ -81,6 +81,7 @@ AssemblerErr_t SecondIteration(Assembler* ASM, Stack_t* Labels) {
         Skip_Spaces(ASM, &i, &asm_line);
 
         if (command_type == PUSH) {
+            
             char* word = GetWord(ASM, &i);
             if (word == NULL)
                 return ASM_GETWORD_FAILED;
@@ -94,9 +95,19 @@ AssemblerErr_t SecondIteration(Assembler* ASM, Stack_t* Labels) {
             StackPush(ASM->OutPutBuffer, &int_from_word);
 
             free(word);
+
         } else if (command_type == PUSHR || command_type == POPR) {
+
             StackPushCommand(ASM, &i, Commands, Commands_size, NULL);
-        } //else if (command_type == JA)
+
+        } else if (command_type == JA || command_type == JAE ||
+                   command_type == JB || command_type == JBE ||
+                   command_type == JE || command_type == JNE ||
+                   command_type == JMP) {
+
+            StackPushLabel(ASM, &i, Labels);
+
+        }
 
         Skip_Spaces(ASM, &i, &asm_line);
     }
