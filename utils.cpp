@@ -66,7 +66,7 @@ AssemblerErr_t StackPushCommand(Assembler* ASM, size_t* i, Instruction* Commands
     if (word == NULL)
         return ASM_GETWORD_FAILED;
 
-    size_t command_index = BinSearch(Commands, Commands_size, sizeof(Instruction), word, strcmp_);
+    size_t command_index = BinSearch(Commands, Commands_size, sizeof(Instruction), word, InstrStrCompare);
     if ( command_index == Commands_size ) {
         fprintf(stderr, "STR[%s] Invalid command at line \n", word); // asm_line
         free(word);
@@ -91,7 +91,7 @@ AssemblerErr_t StackPushLabel(Assembler* ASM, size_t* i, Stack_t* Labels) {
     if (word == NULL)
         return ASM_GETWORD_FAILED;
 
-    size_t command_index = BinSearch(Labels->data, Labels->meta.size, sizeof(Instruction), word, strcmp_);
+    size_t command_index = BinSearch(Labels->data, Labels->meta.size, sizeof(Instruction), word, InstrStrCompare);
     if ( command_index == Labels->meta.size ) {
         fprintf(stderr, "STR[%s] Invalid command at line \n", word); // asm_line
         free(word);
@@ -130,14 +130,14 @@ void* move_ptr(void* arr, size_t offset, size_t element_size) {
     return (void*)((size_t)arr + offset * element_size);
 }
 
-int strcmp_(const void* a, const void* b) {
+int InstrStrCompare(const void* a, const void* b) {
     const char* str1 = ((const Instruction*) a) -> word;
     const char* str2 = (const char*) b;
 
     return strcmp(str1, str2);
 }
 
-int CommandsCompare(const void* a, const void* b) {
+int InstructionsCompare(const void* a, const void* b) {
     Instruction obj1 = *(const Instruction*)a;
     Instruction obj2 = *(const Instruction*)b;
 
