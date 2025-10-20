@@ -50,6 +50,10 @@ AssemblerErr_t Translation(Assembler* ASM) {
 
     SecondIteration(ASM, Labels);
 
+    for (int i=0; i<ASM->OutPutBuffer->meta.size; i++) {
+        printf("%d ", *(int*)MovePtr(ASM->OutPutBuffer->data, i, sizeof(int)));
+    } printf("\n");
+
     WordDestroy(Labels);
     StackDestroy(Labels);
 
@@ -62,11 +66,11 @@ static AssemblerErr_t FirstIteration(Assembler* ASM, Stack_t* Labels) {
     size_t num_of_commands = 0;
 
     for (size_t i = 0; arr[i] != '\0'; ) {
-        Skip_Spaces(ASM, &i);
+        SkipSpaces(ASM, &i);
 
         if (arr[i] == ':') {
             size_t start = i;
-            ++i; Skip_Spaces(ASM, &i);
+            ++i; SkipSpaces(ASM, &i);
 
             char* word = GetWord(ASM, &i);
             if (word == NULL)
@@ -80,7 +84,7 @@ static AssemblerErr_t FirstIteration(Assembler* ASM, Stack_t* Labels) {
             }
         }
 
-        Skip_Spaces(ASM, &i);
+        SkipSpaces(ASM, &i);
 
         if (SkipWord(ASM, &i))
             ++num_of_commands;
@@ -95,12 +99,12 @@ static AssemblerErr_t SecondIteration(Assembler* ASM, Stack_t* Labels) {
     size_t asm_line = 1;
 
     for (size_t i = 0; input_buffer[i] != '\0'; ) {
-        Skip_Spaces(ASM, &i, &asm_line);
+        SkipSpaces(ASM, &i, &asm_line);
 
         size_t command_type = 0;
         StackPushCommand(ASM, &i, Commands, Commands_size, &command_type);
 
-        Skip_Spaces(ASM, &i, &asm_line);
+        SkipSpaces(ASM, &i, &asm_line);
 
         if (command_type == PUSH) {
 
@@ -119,7 +123,7 @@ static AssemblerErr_t SecondIteration(Assembler* ASM, Stack_t* Labels) {
 
         }
 
-        Skip_Spaces(ASM, &i, &asm_line);
+        SkipSpaces(ASM, &i, &asm_line);
     }
 
     return ASM_OK;
