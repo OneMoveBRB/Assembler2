@@ -106,6 +106,24 @@ AssemblerErr_t StackPushLabel(Assembler* ASM, size_t* i, Stack_t* Labels) {
     return ASM_OK;
 }
 
+AssemblerErr_t StackPushInt(Assembler* ASM, size_t* i) {
+    char* word = GetWord(ASM, i);
+    if (word == NULL)
+        return ASM_GETWORD_FAILED;
+    
+    int int_from_word = atoi(word);
+    if (int_from_word == 0 && strcmp(word, "0") != 0) {
+        fprintf(stderr, "Invalid number was given with PUSH\n");
+        free(word);
+        return ASM_INVALID_NUMBER; // DUMP(ASM_INVALID_NUMBER)
+    }
+    StackPush(ASM->OutPutBuffer, &int_from_word);
+
+    free(word);
+
+    return ASM_OK;
+}
+
 size_t BinSearch(void* arr, size_t num, size_t element_size, void* value, int (*cmp)(const void*, const void*)) {
     size_t left = 0;
     size_t right = num-1;
