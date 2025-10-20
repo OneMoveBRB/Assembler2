@@ -117,6 +117,13 @@ int strcmp_(const void* a, const void* b) {
     return strcmp(str1, str2);
 }
 
+int CommandsCompare(const void* a, const void* b) {
+    Instruction obj1 = *(const Instruction*)a;
+    Instruction obj2 = *(const Instruction*)b;
+
+    return (strcmp(obj1.word, obj2.word));
+}
+
 /*!SECTION
 AssemblerErr_t DefineCommand(Assembler* ASM, size_t* i, Instruction* Commands, size_t Commands_size, size_t* command_index) {
     char* word = GetWord(ASM, i);
