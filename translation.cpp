@@ -9,6 +9,9 @@
 #include "instruction.h"
 #include "utils.h"
 
+static AssemblerErr_t FirstIteration(Assembler* ASM, Stack_t* Labels);
+static AssemblerErr_t SecondIteration(Assembler* ASM, Stack_t* Labels);
+
 Instruction Commands[] = {
     {"IN"   ,	IN   },
     {"PUSH" ,	PUSH },
@@ -34,7 +37,30 @@ Instruction Commands[] = {
 
 size_t Commands_size = sizeof(Commands)/sizeof(Commands[0]);
 
-AssemblerErr_t FirstIteration(Assembler* ASM, Stack_t* Labels) {
+
+AssemblerErr_t Translation(Assembler* ASM) {
+    qsort(Commands, Commands_size, sizeof(Instruction), InstructionsCompare);
+
+    Stack_t* Labels;
+    StackInit(&Labels, sizeof(Instruction), FIRST_SIZE, "Labels");
+
+    FirstIteration(ASM, Labels);
+
+    qsort(Labels->data, Labels->meta.size, Labels->meta.element_size, InstructionsCompare);
+
+    SecondIteration(ASM, Labels);
+
+    for (int i=0; i<ASM->OutPutBuffer->meta.size; i++) {
+        printf("%d ", *(int*)move_ptr(ASM->OutPutBuffer->data, i, sizeof(int)));
+    } printf("\n");
+
+    WordDestroy(Labels);
+    StackDestroy(Labels);
+
+    return ASM_OK;
+}
+
+static AssemblerErr_t FirstIteration(Assembler* ASM, Stack_t* Labels) {
     char* arr = ASM->InputBuffer.data;
 
     size_t num_of_commands = 0;
@@ -67,7 +93,7 @@ AssemblerErr_t FirstIteration(Assembler* ASM, Stack_t* Labels) {
     return ASM_OK;
 }
 
-AssemblerErr_t SecondIteration(Assembler* ASM, Stack_t* Labels) {
+static AssemblerErr_t SecondIteration(Assembler* ASM, Stack_t* Labels) {
     char* input_buffer = ASM->InputBuffer.data;
     
     size_t asm_line = 1;
@@ -82,19 +108,7 @@ AssemblerErr_t SecondIteration(Assembler* ASM, Stack_t* Labels) {
 
         if (command_type == PUSH) {
 
-            char* word = GetWord(ASM, &i);
-            if (word == NULL)
-                return ASM_GETWORD_FAILED;
-            
-            int int_from_word = atoi(word);
-            if (int_from_word == 0 && strcmp(word, "0") != 0) {
-                fprintf(stderr, "Invalid number was given with PUSH\n");
-                free(word);
-                return ASM_INVALID_NUMBER; // DUMP(ASM_INVALID_NUMBER)
-            }
-            StackPush(ASM->OutPutBuffer, &int_from_word);
-
-            free(word);
+            StackPushInt(ASM, &i);
 
         } else if (command_type == PUSHR || command_type == POPR) {
 
@@ -111,28 +125,6 @@ AssemblerErr_t SecondIteration(Assembler* ASM, Stack_t* Labels) {
 
         Skip_Spaces(ASM, &i, &asm_line);
     }
-
-    return ASM_OK;
-}
-
-AssemblerErr_t Translation(Assembler* ASM) {
-    qsort(Commands, Commands_size, sizeof(Instruction), InstructionsCompare);
-
-    Stack_t* Labels;
-    StackInit(&Labels, sizeof(Instruction), FIRST_SIZE, "Labels");
-
-    FirstIteration(ASM, Labels);
-
-    qsort(Labels->data, Labels->meta.size, Labels->meta.element_size, InstructionsCompare);
-
-    SecondIteration(ASM, Labels);
-
-    for (int i=0; i<ASM->OutPutBuffer->meta.size; i++) {
-        printf("%d ", *(int*)move_ptr(ASM->OutPutBuffer->data, i, sizeof(int)));
-    } printf("\n");
-
-    WordDestroy(Labels);
-    StackDestroy(Labels);
 
     return ASM_OK;
 }
