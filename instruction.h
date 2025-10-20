@@ -18,7 +18,14 @@ enum InstructionType {
     SUB     = 7,
     MUL     = 8,
     OUT     = 9,
-    HLT     = 10
+    HLT     = 10,
+    JB      = 11,
+    JBE     = 12,
+    JA      = 13,
+    JAE     = 14,
+    JE      = 15,
+    JNE     = 16,
+    JMP     = 17
 };
 
 enum RegsType {
