@@ -4,5 +4,6 @@
 #include "asm_settings.h"
 #include "asm_alloc.h"
 #include "translation.h"
+#include "io.h"
 
 #endif
