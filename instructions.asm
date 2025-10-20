@@ -1,0 +1,17 @@
+IN
+: anotherOne
+PUSH 10
+PUSH 20
+PUSH 30 ; THIS is comments
+ADD
+SUB
+: THIS_is_label
+PUSH 15
+POPR RAX
+PUSHR RAX
+JB THIS_is_label
+PUSH 50
+PUSH 2921
+JNE anotherOne
+MUL
+OUT
