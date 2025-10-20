@@ -81,7 +81,7 @@ AssemblerErr_t SecondIteration(Assembler* ASM, Stack_t* Labels) {
         Skip_Spaces(ASM, &i, &asm_line);
 
         if (command_type == PUSH) {
-            
+
             char* word = GetWord(ASM, &i);
             if (word == NULL)
                 return ASM_GETWORD_FAILED;
@@ -116,12 +116,14 @@ AssemblerErr_t SecondIteration(Assembler* ASM, Stack_t* Labels) {
 }
 
 AssemblerErr_t Translation(Assembler* ASM) {
-    qsort(Commands, Commands_size, sizeof(Instruction), CommandsCompare);
+    qsort(Commands, Commands_size, sizeof(Instruction), InstructionsCompare);
 
     Stack_t* Labels;
     StackInit(&Labels, sizeof(Instruction), FIRST_SIZE, "Labels");
 
     FirstIteration(ASM, Labels);
+
+    qsort(Labels->data, Labels->meta.size, Labels->meta.element_size, InstructionsCompare);
 
     SecondIteration(ASM, Labels);
 
