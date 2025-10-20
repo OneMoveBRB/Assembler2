@@ -8,7 +8,7 @@
 #include "instruction.h"
 
 
-void Skip_Spaces(Assembler* ASM, size_t* i, size_t* asm_line) {
+void SkipSpaces(Assembler* ASM, size_t* i, size_t* asm_line) {
     const char* arr = ASM->InputBuffer.data;
     const size_t size = ASM->InputBuffer.size;
 
@@ -100,7 +100,7 @@ AssemblerErr_t StackPushLabel(Assembler* ASM, size_t* i, Stack_t* Labels) {
 
     free(word);
 
-    size_t Label_type = ((Instruction*)move_ptr(Labels->data, command_index, sizeof(Instruction)))->id;
+    size_t Label_type = ((Instruction*)MovePtr(Labels->data, command_index, sizeof(Instruction)))->id;
     StackPush(ASM->OutPutBuffer, &Label_type);
     
     return ASM_OK;
@@ -130,9 +130,9 @@ size_t BinSearch(void* arr, size_t num, size_t element_size, void* value, int (*
 
     while ( left <= right ) {
         size_t mid = left + (right - left)/2;
-        if (cmp(move_ptr(arr, mid, element_size), value) == 0) {
+        if (cmp(MovePtr(arr, mid, element_size), value) == 0) {
             return mid;
-        } else if (cmp(move_ptr(arr, mid, element_size), value) < 0) {
+        } else if (cmp(MovePtr(arr, mid, element_size), value) < 0) {
             left = mid + 1;
         } else {
             if (right == 0)
@@ -144,7 +144,7 @@ size_t BinSearch(void* arr, size_t num, size_t element_size, void* value, int (*
     return num;
 }
 
-void* move_ptr(void* arr, size_t offset, size_t element_size) {
+void* MovePtr(void* arr, size_t offset, size_t element_size) {
     return (void*)((size_t)arr + offset * element_size);
 }
 
