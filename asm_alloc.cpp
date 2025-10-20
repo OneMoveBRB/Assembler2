@@ -5,7 +5,7 @@
 #include <string.h>
 #include <assert.h>
 
-#include "ReadFile.h"
+#include "read_file.h"
 
 
 AssemblerErr_t AssemblerInit(Assembler* ASM, const char* file_name) {
@@ -19,15 +19,6 @@ AssemblerErr_t AssemblerInit(Assembler* ASM, const char* file_name) {
     }
 
     TempBufferInit(&ASM->InputBuffer, (size_t)file_size + 1);
-
-    size_t buffer_size = ReadFile(ASM->InputBuffer.data, (size_t)file_size, file_name);
-    if (buffer_size < ASM->InputBuffer.capacity - 1) {
-        fprintf(stderr, "Not all possible bytes were read!\n");
-        return ASM_READING_ERROR;
-    }
-
-    ASM->InputBuffer.data[ASM->InputBuffer.capacity - 1] = 0;
-    ASM->InputBuffer.size = ASM->InputBuffer.capacity;
 
     StackInit(&ASM->OutPutBuffer, sizeof(int), FIRST_SIZE, "OutPutBuffer");
 
