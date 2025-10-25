@@ -21,6 +21,8 @@ Instruction Commands[] = {
     {"ADD"  ,	ADD  },
     {"SUB"  ,	SUB  },
     {"MUL"  ,	MUL  },
+    {"DIV"  ,   DIV  },
+    {"SQRT" ,   SQRT },
     {"OUT"  ,	OUT  },
     {"HLT"  ,	HLT  },
     {"RAX"  ,   RAX  },
@@ -32,7 +34,9 @@ Instruction Commands[] = {
     {"JBE"  ,   JBE  },
     {"JE"   ,   JE   },
     {"JNE"  ,   JNE  },
-    {"JMP"  ,   JMP  }
+    {"JMP"  ,   JMP  },
+    {"CALL" ,   CALL },
+    {"RET"  ,   RET  }
 };
 
 size_t Commands_size = sizeof(Commands)/sizeof(Commands[0]);
@@ -49,6 +53,10 @@ AssemblerErr_t Translation(Assembler* ASM) {
     qsort(Labels->data, Labels->meta.size, Labels->meta.element_size, InstructionsCompare);
 
     SecondIteration(ASM, Labels);
+
+    for (int i=0; i<ASM->OutPutBuffer->meta.size; i++) {
+        printf("%d ", *(int*)MovePtr(ASM->OutPutBuffer->data, i, sizeof(int)));
+    } printf("\n");
 
     WordDestroy(Labels);
     StackDestroy(Labels);
@@ -74,7 +82,7 @@ static AssemblerErr_t FirstIteration(Assembler* ASM, Stack_t* Labels) {
 
             Instruction label = {word, num_of_commands};
             StackPush(Labels, &label);
-
+            
             for (size_t j = start; j < i; j++) {
                 arr[j] = ' ';
             }
@@ -110,13 +118,15 @@ static AssemblerErr_t SecondIteration(Assembler* ASM, Stack_t* Labels) {
 
             StackPushCommand(ASM, &i, Commands, Commands_size, NULL);
 
-        } else if (command_type == JA || command_type == JAE ||
-                   command_type == JB || command_type == JBE ||
-                   command_type == JE || command_type == JNE ||
-                   command_type == JMP) {
+        } else if (command_type == JA  || command_type == JAE ||
+                   command_type == JB  || command_type == JBE ||
+                   command_type == JE  || command_type == JNE ||
+                   command_type == JMP || command_type == CALL) {
 
             StackPushLabel(ASM, &i, Labels);
 
+        } else if (command_type == IN) {
+            ASM->StartIP = ASM->OutPutBuffer->meta.size - 1;
         }
 
         SkipSpaces(ASM, &i, &asm_line);
