@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <assert.h>
 
 #include "asm_alloc.h"
 #include "instruction.h"
@@ -43,9 +44,11 @@ size_t Commands_size = sizeof(Commands)/sizeof(Commands[0]);
 
 
 AssemblerErr_t Translation(Assembler* ASM) {
+    assert( ASM != NULL );
+
     qsort(Commands, Commands_size, sizeof(Instruction), InstructionsCompare);
 
-    Stack_t* Labels;
+    Stack_t* Labels = NULL;
     StackInit(&Labels, sizeof(Instruction), FIRST_SIZE, "Labels");
 
     FirstIteration(ASM, Labels);
