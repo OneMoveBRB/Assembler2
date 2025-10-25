@@ -8,6 +8,8 @@
 #include "read_file.h"
 
 
+const int KB = 1024;
+
 AssemblerErr_t AssemblerInit(Assembler* ASM, const char* file_name) {
     assert( ASM != NULL );
     assert( file_name != NULL );
@@ -39,7 +41,7 @@ AssemblerErr_t AssemblerDestroy(Assembler* ASM) {
 
 AssemblerErr_t BufferInit(Buffer_t* buffer, size_t capacity) {
     assert( buffer != NULL );
-    assert( 1 <= capacity && capacity <= FIRST_SIZE*1024 );
+    assert( 1 <= capacity && capacity <= FIRST_SIZE*KB );
 
     buffer->size = 0;
     buffer->capacity = capacity;
