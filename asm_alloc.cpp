@@ -18,9 +18,11 @@ AssemblerErr_t AssemblerInit(Assembler* ASM, const char* file_name) {
         return ASM_READING_ERROR;
     }
 
-    TempBufferInit(&ASM->InputBuffer, (size_t)file_size + 1);
+    BufferInit(&ASM->InputBuffer, (size_t)file_size + 1);
 
     StackInit(&ASM->OutPutBuffer, sizeof(int), FIRST_SIZE, "OutPutBuffer");
+
+    ASM->StartIP = 0;
 
     return ASM_OK;
 }
@@ -28,14 +30,14 @@ AssemblerErr_t AssemblerInit(Assembler* ASM, const char* file_name) {
 AssemblerErr_t AssemblerDestroy(Assembler* ASM) {
     assert( ASM != NULL );
 
-    TempBufferDestroy(&ASM->InputBuffer);
+    BufferDestroy(&ASM->InputBuffer);
 
     StackDestroy(ASM->OutPutBuffer);
 
     return ASM_OK;
 }
 
-AssemblerErr_t TempBufferInit(TempBuffer_t* buffer, size_t capacity) {
+AssemblerErr_t BufferInit(Buffer_t* buffer, size_t capacity) {
     assert( buffer != NULL );
     assert( 1 <= capacity && capacity <= FIRST_SIZE*1024 );
 
@@ -50,7 +52,7 @@ AssemblerErr_t TempBufferInit(TempBuffer_t* buffer, size_t capacity) {
     return ASM_OK;
 }
 
-AssemblerErr_t TempBufferDestroy(TempBuffer_t* buffer) {
+AssemblerErr_t BufferDestroy(Buffer_t* buffer) {
     assert( buffer != NULL );
 
     buffer->size = 0;
@@ -61,7 +63,7 @@ AssemblerErr_t TempBufferDestroy(TempBuffer_t* buffer) {
     return ASM_OK;
 }
 
-AssemblerErr_t TempBufferPush(TempBuffer_t* buffer, char value) {
+AssemblerErr_t BufferPush(Buffer_t* buffer, char value) {
     assert( buffer != NULL );
 
     const size_t exp_multiplier = 2;
@@ -83,7 +85,7 @@ AssemblerErr_t TempBufferPush(TempBuffer_t* buffer, char value) {
     return ASM_OK;
 }
 
-AssemblerErr_t TempBufferRelease(TempBuffer_t* buffer) {
+AssemblerErr_t BufferRelease(Buffer_t* buffer) {
     assert( buffer != NULL );
 
     buffer->data = (char*)realloc(buffer->data, (buffer->size + 1) * sizeof(char));
