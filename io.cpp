@@ -20,7 +20,8 @@ AssemblerErr_t Read_File_2_Buffer(Assembler* ASM, const char* file_name, const s
 
 AssemblerErr_t Write_Buffer_2_File(Assembler* ASM, const char* file_name) {
     size_t num_of_wrote_elements = WriteFile((const int*)ASM->OutPutBuffer->data,
-                                             ASM->OutPutBuffer->meta.size, file_name);
+                                             ASM->OutPutBuffer->meta.size, 
+                                             ASM->StartIP, file_name);
     
     if (num_of_wrote_elements < ASM->OutPutBuffer->meta.size) {
         fprintf(stderr, "Not all possible bytes were written!\n");
