@@ -17,15 +17,19 @@ enum InstructionType {
     ADD     = 6,
     SUB     = 7,
     MUL     = 8,
-    OUT     = 9,
-    HLT     = 10,
+    DIV     = 9,
+    SQRT    = 10,
+    OUT     = 11,
+    HLT     = 12,
     JA      = 13,
     JAE     = 14,
-    JB      = 11,
-    JBE     = 12,
-    JE      = 15,
-    JNE     = 16,
-    JMP     = 17
+    JB      = 15,
+    JBE     = 16,
+    JE      = 17,
+    JNE     = 18,
+    JMP     = 19,
+    CALL    = 20,
+    RET     = 21
 };
 
 enum RegsType {
