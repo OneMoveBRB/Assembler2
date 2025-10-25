@@ -8,15 +8,16 @@
 
 const int FIRST_SIZE = 8;
 
-struct TempBuffer_t {
+struct Buffer_t {
     char* data;
     size_t size;
     size_t capacity;
 };
 
 struct Assembler {
-    TempBuffer_t InputBuffer;
+    Buffer_t InputBuffer;
     Stack_t* OutPutBuffer;
+    size_t StartIP;
 };
 
 enum AssemblerErr_t {
