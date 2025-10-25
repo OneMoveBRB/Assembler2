@@ -6,7 +6,10 @@
 
 #include "../stack/stack.h"
 
+#define FREE(ptr) free(ptr); ptr = NULL;
+
 const int FIRST_SIZE = 8;
+const int KB = 1024;
 
 struct Buffer_t {
     char* data;
