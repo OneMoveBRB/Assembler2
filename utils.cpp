@@ -69,11 +69,11 @@ AssemblerErr_t StackPushCommand(Assembler* ASM, size_t* i, Instruction* Commands
     size_t command_index = BinSearch(Commands, Commands_size, sizeof(Instruction), word, InstrStrCompare);
     if ( command_index == Commands_size ) {
         fprintf(stderr, "STR[%s] Invalid command at line \n", word); // asm_line
-        free(word);
+        FREE(word);
         return ASM_INVALID_COMMAND; // DUMP(ASM_INVALID_COMMAND)
     }
 
-    free(word);
+    FREE(word);
     
     if (command_type != NULL) {
         *command_type = Commands[command_index].id;
@@ -94,11 +94,11 @@ AssemblerErr_t StackPushLabel(Assembler* ASM, size_t* i, Stack_t* Labels) {
     size_t command_index = BinSearch(Labels->data, Labels->meta.size, sizeof(Instruction), word, InstrStrCompare);
     if ( command_index == Labels->meta.size ) {
         fprintf(stderr, "STR[%s] Invalid command at line \n", word); // asm_line
-        free(word);
+        FREE(word);
         return ASM_INVALID_COMMAND; // DUMP(ASM_INVALID_COMMAND)
     }
 
-    free(word);
+    FREE(word);
 
     size_t Label_type = ((Instruction*)MovePtr(Labels->data, command_index, sizeof(Instruction)))->id;
     StackPush(ASM->OutPutBuffer, &Label_type);
@@ -114,12 +114,12 @@ AssemblerErr_t StackPushInt(Assembler* ASM, size_t* i) {
     int int_from_word = atoi(word);
     if (int_from_word == 0 && strcmp(word, "0") != 0) {
         fprintf(stderr, "Invalid number was given with PUSH\n");
-        free(word);
+        FREE(word);
         return ASM_INVALID_NUMBER; // DUMP(ASM_INVALID_NUMBER)
     }
     StackPush(ASM->OutPutBuffer, &int_from_word);
 
-    free(word);
+    FREE(word);
 
     return ASM_OK;
 }
